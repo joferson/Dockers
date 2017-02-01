@@ -1,0 +1,77 @@
+# NOTE: This docker-compose.yml is meant to be just an example of how
+# you could accomplish this on your own. It is not intended to work in
+# all use-cases and must be adapted to fit your needs. This is merely
+# a guideline.
+# See docs.getsentry.com/on-premise/server/ for full
+# instructions
+
+version: '2'
+services:
+  base:
+    build: .
+    environment:
+      # Run `docker-compose run web config generate-secret-key`
+      # to get the SENTRY_SECRET_KEY value.
+      # SENTRY_SECRET_KEY: ''
+      SENTRY_MEMCACHED_HOST: memcached
+      SENTRY_REDIS_HOST: redis
+      #SENTRY_POSTGRES_HOST: postgres
+      SENTRY_EMAIL_HOST: postfix
+      SENTRY_SERVER_EMAIL: 'sentry@wpensar.com.br'
+      SENTRY_EMAIL_USER: 'wpensar.com.br'
+      SENTRY_EMAIL_USE_TLS: 'false'
+      SENTRY_POSTGRES_HOST: 'sentry-docker.ct7pmsoxynvt.sa-east-1.rds.amazonaws.com'
+      SENTRY_POSTGRES_PORT: '5432'
+      SENTRY_DB_NAME: 'app_sentry'
+      SENTRY_DB_USER: 'app_sentry'
+      SENTRY_DB_PASSWORD: 'thapheT3enu2wadr7wUphe7re'
+      SENTRY_SECRET_KEY: "*=8a!@5#+j_yf1bm1ps@rb)*-3$m42!=*_v*iy0mww8#$_&1_)"
+      ADMIN_USERNAME: "wpadmin"
+      ADMIN_PASSWORD: "915ed727c7783b8e98a9c3cb98939a01"
+    volumes:
+      - ./data/sentry:/var/lib/sentry/files
+
+  postfix:
+    image: wpensar/postfix:latest
+    ports:
+      - '25:25'
+    hostname: postfix
+
+  memcached:
+    image: memcached:1.4
+
+  redis:
+    image: redis:3.2-alpine
+
+  #postgres:
+   # image: postgres:9.5
+    #volumes:
+     # - ./data/postgres:/var/lib/postgresql/data
+
+  web:
+    extends: base
+    links:
+      - redis
+      #- postgres
+      - memcached
+      - postfix
+    ports:
+      - '80:9000'
+
+  cron:
+    extends: base
+    command: run cron
+    links:
+      - redis
+      #- postgres
+      - memcached
+      - postfix
+
+  worker:
+    extends: base
+    command: run worker
+    links:
+      - redis
+      #- postgres
+      - memcached
+      - postfix
