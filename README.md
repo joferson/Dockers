@@ -6,21 +6,21 @@
 
         wget -qO- https://get.docker.com/ | sh
     
-  ### Utilitários
+### Utilitários ###
 
-    * Docker Machine [Releases](https://github.com/docker/machine/releases) 
+* Docker Machine [Releases](https://github.com/docker/machine/releases) 
 
-            $ curl -L https://github.com/docker/machine/releases/download/v0.9.0/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine &&
-                chmod +x /tmp/docker-machine &&
-                sudo cp /tmp/docker-machine /usr/local/bin/docker-machine
-    	
-    * Docker Compose [Releases](https://github.com/docker/compose/releases) 
-         
-            $ pip install docker-compose
-        ou    	
-         
-            $ curl -L https://github.com/docker/compose/releases/download/1.10.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
-            chmod +x /usr/local/bin/docker-compose
+        $ curl -L https://github.com/docker/machine/releases/download/v0.9.0/docker-machine-`uname -s`-`uname -m` >/tmp/docker-machine &&
+            chmod +x /tmp/docker-machine &&
+            sudo cp /tmp/docker-machine /usr/local/bin/docker-machine
+    
+* Docker Compose [Releases](https://github.com/docker/compose/releases) 
+     
+        $ pip install docker-compose
+    ou    	
+     
+        $ curl -L https://github.com/docker/compose/releases/download/1.10.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+        chmod +x /usr/local/bin/docker-compose
 
 ### Docker  ###
 
