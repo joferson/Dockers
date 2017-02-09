@@ -20,7 +20,7 @@ services:
       SENTRY_SERVER_EMAIL: 'sentry@wpensar.com.br'
       SENTRY_EMAIL_USER: 'wpensar.com.br'
       SENTRY_EMAIL_USE_TLS: 'false'
-      SENTRY_POSTGRES_HOST: 'sentry-docker.ct7pmsoxynvt.sa-east-1.rds.amazonaws.com'
+      SENTRY_POSTGRES_HOST: 'sentry-db.ct7pmsoxynvt.sa-east-1.rds.amazonaws.com'
       SENTRY_POSTGRES_PORT: '5432'
       SENTRY_DB_NAME: 'app_sentry'
       SENTRY_DB_USER: 'app_sentry'
@@ -28,20 +28,28 @@ services:
       SENTRY_SECRET_KEY: "*=8a!@5#+j_yf1bm1ps@rb)*-3$m42!=*_v*iy0mww8#$_&1_)"
       ADMIN_USERNAME: "wpadmin"
       ADMIN_PASSWORD: "915ed727c7783b8e98a9c3cb98939a01"
+
     volumes:
       - ./data/sentry:/var/lib/sentry/files
 
   postfix:
-    image: 655231752613.dkr.ecr.us-east-1.amazonaws.com/wpensar/postfix:latest
+    image: wpensar/postfix:latest
+    environment:
+      - "TZ=America/Sao_Paulo"
     ports:
       - '25:25'
     hostname: postfix
 
   memcached:
     image: memcached:1.4
+    environment:
+      - "TZ=America/Sao_Paulo"
 
   redis:
     image: redis:3.2-alpine
+    environment:
+      - "TZ=America/Sao_Paulo"
+
 
   #postgres:
    # image: postgres:9.5
@@ -49,9 +57,7 @@ services:
      # - ./data/postgres:/var/lib/postgresql/data
 
   web:
-    extends: 
-       service: base
-    image: 655231752613.dkr.ecr.us-east-1.amazonaws.com/sentry_base
+    extends: base
     links:
       - redis
       #- postgres
@@ -61,9 +67,7 @@ services:
       - '80:9000'
 
   cron:
-    extends: 
-       service: base
-    image: 655231752613.dkr.ecr.us-east-1.amazonaws.com/sentry_cron
+    extends: base
     command: run cron
     links:
       - redis
@@ -72,9 +76,7 @@ services:
       - postfix
 
   worker:
-    extends: 
-       service: base
-    image: 655231752613.dkr.ecr.us-east-1.amazonaws.com/sentry_worker
+    extends: base
     command: run worker
     links:
       - redis
