@@ -1,4 +1,0 @@
-# Add plugins here
-sentry-plugins
-#sentry-jira
-sentry-hipchat
